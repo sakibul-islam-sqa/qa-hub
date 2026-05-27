@@ -7,12 +7,12 @@
 
 # Defense-in-depth headers.
 # - CSP: blocks injected scripts and limits what the page can talk to.
-#   - script-src is now strict ('self' only). The previous inline theme-init
-#     script lives at /theme-init.js so we can drop 'unsafe-inline' for scripts
-#     — the most important XSS lever.
-#   - style-src still allows 'unsafe-inline' because React `style={...}` props
-#     emit inline style attributes (toast progress bar, canvas sizing, etc.)
-#     and a static export cannot issue per-request nonces.
+#   - script-src allows 'unsafe-inline' because Next.js static export emits
+#     inline <script> tags carrying the hydration payload (self.__next_f.push)
+#     whose content — and therefore hash — changes every build. A static export
+#     cannot issue per-request nonces, so hash-pinning isn't viable either.
+#   - style-src allows 'unsafe-inline' for the same reason: React `style={...}`
+#     props emit inline style attributes (toast progress bar, canvas sizing, etc.).
 #   - connect-src is intentionally broad because the app is a thin client that
 #     calls many AI providers directly (OpenAI, Anthropic, Gemini, Groq, OpenRouter,
 #     GitHub Models, Mistral, Cerebras) and Firebase, plus user-configured Ollama
@@ -25,4 +25,4 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
-    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https: http://localhost:* http://127.0.0.1:* wss:; frame-src 'self' https: http:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https: http://localhost:* http://127.0.0.1:* wss:; frame-src 'self' https: http:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"

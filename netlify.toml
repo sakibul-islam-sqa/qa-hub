@@ -11,6 +11,8 @@
 #     inline <script> tags carrying the hydration payload (self.__next_f.push)
 #     whose content — and therefore hash — changes every build. A static export
 #     cannot issue per-request nonces, so hash-pinning isn't viable either.
+#     apis.google.com / gstatic.com / accounts.google.com are required by
+#     Firebase Auth's signInWithPopup (gapi loader + auth iframe).
 #   - style-src allows 'unsafe-inline' for the same reason: React `style={...}`
 #     props emit inline style attributes (toast progress bar, canvas sizing, etc.).
 #   - connect-src is intentionally broad because the app is a thin client that
@@ -25,4 +27,4 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https: http://localhost:* http://127.0.0.1:* wss:; frame-src 'self' https: http:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://apis.google.com https://accounts.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https: http://localhost:* http://127.0.0.1:* wss:; frame-src 'self' https: http:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"

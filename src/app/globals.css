@@ -1,0 +1,623 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* Light mode — warm off-white surfaces, refined contrast */
+  --bg: 220 25% 99%;
+  --surface: 0 0% 100%;
+  --surface-2: 220 20% 97%;
+  --surface-3: 220 16% 94%;
+  --border: 220 16% 90%;
+  --border-strong: 220 14% 82%;
+  --fg: 222 47% 9%;
+  --fg-muted: 222 25% 30%;
+  --muted: 220 9% 46%;
+
+  /* Brand accents — indigo → violet duo */
+  --accent: 245 80% 58%;
+  --accent-2: 270 84% 64%;
+  --accent-fg: 0 0% 100%;
+  --accent-soft: 245 100% 96%;
+  --ring: 245 90% 60%;
+
+  --success: 152 65% 40%;
+  --danger: 0 72% 51%;
+  --warning: 32 95% 50%;
+
+  /* Prism syntax token palette (light) */
+  --code-comment: 220 9% 46%;
+  --code-keyword: 280 70% 45%;
+  --code-string: 142 70% 30%;
+  --code-number: 25 95% 45%;
+  --code-property: 210 80% 45%;
+  --code-punctuation: 220 9% 40%;
+  --code-function: 250 84% 55%;
+  --code-operator: 332 79% 50%;
+  --code-tag: 0 72% 50%;
+  --code-attr-name: 25 90% 45%;
+  --code-attr-value: 142 70% 30%;
+  --code-regex: 332 79% 50%;
+  --code-builtin: 199 89% 40%;
+}
+
+.dark {
+  /* Dark mode — deep slate-blue with crisp surfaces */
+  --bg: 224 32% 6%;
+  --surface: 224 28% 9%;
+  --surface-2: 224 24% 12%;
+  --surface-3: 224 20% 16%;
+  --border: 224 18% 18%;
+  --border-strong: 224 15% 26%;
+  --fg: 210 25% 97%;
+  --fg-muted: 218 15% 76%;
+  --muted: 220 10% 60%;
+
+  --accent: 250 95% 72%;
+  --accent-2: 275 95% 76%;
+  --accent-fg: 224 32% 8%;
+  --accent-soft: 245 60% 16%;
+  --ring: 250 95% 72%;
+
+  --success: 152 70% 55%;
+  --danger: 0 85% 67%;
+  --warning: 38 96% 62%;
+
+  /* Prism syntax token palette (dark) - one-dark inspired */
+  --code-comment: 218 11% 50%;
+  --code-keyword: 280 90% 78%;
+  --code-string: 142 60% 65%;
+  --code-number: 30 95% 70%;
+  --code-property: 199 85% 70%;
+  --code-punctuation: 218 11% 70%;
+  --code-function: 210 95% 75%;
+  --code-operator: 332 85% 75%;
+  --code-tag: 0 80% 72%;
+  --code-attr-name: 38 95% 72%;
+  --code-attr-value: 142 60% 70%;
+  --code-regex: 332 85% 75%;
+  --code-builtin: 199 90% 72%;
+}
+
+/* Prism token styles - used by CodeBlock + CodeEditor */
+.token.comment,
+.token.prolog,
+.token.cdata,
+.token.doctype {
+  color: hsl(var(--code-comment));
+  font-style: italic;
+}
+.token.punctuation {
+  color: hsl(var(--code-punctuation));
+}
+.token.keyword,
+.token.atrule,
+.token.important,
+.token.selector {
+  color: hsl(var(--code-keyword));
+  font-weight: 500;
+}
+.token.string,
+.token.attr-value,
+.token.char,
+.token.url {
+  color: hsl(var(--code-string));
+}
+.token.number,
+.token.boolean,
+.token.constant,
+.token.symbol {
+  color: hsl(var(--code-number));
+}
+.token.property,
+.token.tag {
+  color: hsl(var(--code-property));
+}
+.token.function,
+.token.class-name {
+  color: hsl(var(--code-function));
+}
+.token.operator,
+.token.entity,
+.token.variable {
+  color: hsl(var(--code-operator));
+}
+.token.attr-name {
+  color: hsl(var(--code-attr-name));
+}
+.token.regex {
+  color: hsl(var(--code-regex));
+}
+.token.builtin {
+  color: hsl(var(--code-builtin));
+}
+.token.null,
+.token.undefined {
+  color: hsl(var(--code-number));
+  font-style: italic;
+}
+.token.deleted {
+  color: hsl(var(--danger));
+}
+.token.inserted {
+  color: hsl(var(--success));
+}
+.token.bold {
+  font-weight: 600;
+}
+.token.italic {
+  font-style: italic;
+}
+
+html,
+body {
+  background: hsl(var(--bg));
+  color: hsl(var(--fg));
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+::selection {
+  background: hsl(var(--accent) / 0.3);
+  color: hsl(var(--fg));
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border-strong));
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted) / 0.6);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Utility classes for the redesigned theme
+   ───────────────────────────────────────────────────────────── */
+
+/* Grid mesh background — subtle dotted/lined pattern that fades to center */
+.bg-grid-fade {
+  background-image:
+    linear-gradient(to right, hsl(var(--fg) / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--fg) / 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+}
+
+.bg-dots-fade {
+  background-image: radial-gradient(hsl(var(--fg) / 0.12) 1px, transparent 1px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 35%, black 30%, transparent 80%);
+  mask-image: radial-gradient(ellipse 70% 55% at 50% 35%, black 30%, transparent 80%);
+}
+
+/* Aurora blobs — used on home hero & login backdrop */
+.bg-aurora::before,
+.bg-aurora::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+.bg-aurora::before {
+  background:
+    radial-gradient(60rem 30rem at 15% 0%, hsl(var(--accent) / 0.18), transparent 60%),
+    radial-gradient(50rem 26rem at 90% 10%, hsl(var(--accent-2) / 0.16), transparent 60%);
+}
+.bg-aurora::after {
+  background: radial-gradient(40rem 24rem at 50% 100%, hsl(var(--accent) / 0.1), transparent 70%);
+}
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(
+    100deg,
+    hsl(var(--accent)) 0%,
+    hsl(var(--accent-2)) 60%,
+    hsl(var(--accent)) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 8s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Glass surfaces */
+.glass {
+  background: hsl(var(--surface) / 0.7);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border: 1px solid hsl(var(--border) / 0.8);
+}
+.glass-strong {
+  background: hsl(var(--bg) / 0.78);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* Hover lift — reusable for cards */
+.lift {
+  transition:
+    transform 280ms cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 280ms cubic-bezier(0.32, 0.72, 0, 1),
+    border-color 280ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Focus ring used across primitives */
+.ring-brand {
+  --tw-ring-color: hsl(var(--ring) / 0.25);
+}
+
+/* Shimmer skeleton */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--surface-2)) 0%,
+    hsl(var(--surface-3)) 50%,
+    hsl(var(--surface-2)) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s linear infinite;
+}
+
+/* AI markdown output preview - minimal typography that matches the app's palette. */
+.prose-qa {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: hsl(var(--fg));
+}
+.prose-qa h1,
+.prose-qa h2,
+.prose-qa h3,
+.prose-qa h4,
+.prose-qa h5,
+.prose-qa h6 {
+  font-weight: 600;
+  margin: 1.2em 0 0.5em;
+  letter-spacing: -0.01em;
+}
+.prose-qa h1 {
+  font-size: 1.35rem;
+}
+.prose-qa h2 {
+  font-size: 1.15rem;
+}
+.prose-qa h3 {
+  font-size: 1rem;
+  color: hsl(var(--accent));
+}
+.prose-qa h4 {
+  font-size: 0.95rem;
+}
+.prose-qa h1:first-child,
+.prose-qa h2:first-child,
+.prose-qa h3:first-child {
+  margin-top: 0;
+}
+.prose-qa p {
+  margin: 0.5em 0;
+}
+.prose-qa ul,
+.prose-qa ol {
+  margin: 0.5em 0 0.5em 1.25rem;
+  padding: 0;
+}
+.prose-qa ul {
+  list-style: disc;
+}
+.prose-qa ol {
+  list-style: decimal;
+}
+.prose-qa li {
+  margin: 0.2em 0;
+}
+.prose-qa li > strong {
+  color: hsl(var(--fg));
+}
+.prose-qa code {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: hsl(var(--surface-2));
+  border: 1px solid hsl(var(--border));
+}
+.prose-qa pre {
+  background: hsl(var(--surface-2));
+  border: 1px solid hsl(var(--border));
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+  margin: 0.75em 0;
+}
+.prose-qa pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+.prose-qa-code {
+  position: relative;
+  margin: 0.75em 0;
+  border-radius: 10px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--surface-2));
+  overflow: hidden;
+}
+.prose-qa-code > pre {
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  background: transparent;
+}
+.prose-qa-code-lang {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.25rem 0.4rem 0.25rem 0.75rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--muted));
+  background: hsl(var(--surface));
+  border-bottom: 1px solid hsl(var(--border));
+}
+.prose-qa-code-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  font-family: var(--font-sans, inherit);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: hsl(var(--muted));
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    color 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+.prose-qa-code-copy:hover {
+  color: hsl(var(--fg));
+  background: hsl(var(--surface-2));
+  border-color: hsl(var(--border));
+}
+.prose-qa-code-copy:focus-visible {
+  outline: none;
+  color: hsl(var(--fg));
+  border-color: hsl(var(--accent) / 0.5);
+  box-shadow: 0 0 0 3px hsl(var(--accent) / 0.2);
+}
+.prose-qa-code-copy[data-copied='true'] {
+  color: hsl(var(--accent));
+  border-color: hsl(var(--accent) / 0.4);
+  background: hsl(var(--accent) / 0.08);
+}
+.prose-qa-code-copy svg {
+  flex-shrink: 0;
+}
+.prose-qa-table {
+  margin: 0.75em 0;
+  overflow-x: auto;
+  border: 1px solid hsl(var(--border));
+  border-radius: 10px;
+}
+.prose-qa-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.prose-qa-table th,
+.prose-qa-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid hsl(var(--border));
+  border-right: 1px solid hsl(var(--border));
+  vertical-align: top;
+}
+.prose-qa-table th:last-child,
+.prose-qa-table td:last-child {
+  border-right: 0;
+}
+.prose-qa-table th {
+  font-weight: 600;
+  color: hsl(var(--fg));
+  background: hsl(var(--surface-2) / 0.6);
+}
+.prose-qa-table tr:last-child td {
+  border-bottom: 0;
+}
+.prose-qa blockquote {
+  border-left: 3px solid hsl(var(--accent));
+  padding-left: 0.75rem;
+  margin: 0.75em 0;
+  color: hsl(var(--muted));
+}
+.prose-qa a {
+  color: hsl(var(--accent));
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-qa strong {
+  color: hsl(var(--fg));
+  font-weight: 600;
+}
+
+/* Toaster - enter/exit + progress animations.
+   Modern stack behaviour: each toast owns a "shell" that animates its
+   own slot height + margin so the list reflows smoothly when items
+   are added or removed. The inner card slides in from the right with
+   a subtle spring and slides out the same way on dismiss. */
+@keyframes toast-progress {
+  0% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(0);
+  }
+}
+
+/* Outer slot — owns the vertical space + spacing between toasts.
+   Collapsed by default (entering / leaving); expanded when open. */
+.toast-shell {
+  overflow: hidden;
+  max-height: 0;
+  margin-bottom: 0;
+  transition:
+    max-height 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    margin-bottom 320ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.toast-shell[data-state='open'] {
+  max-height: 320px;
+  margin-bottom: 0.5rem;
+}
+
+/* Inner card — handles slide + scale + fade.
+   Base style is the offscreen "entering" position so initial paint
+   shows it offscreen; the data-state flip to "open" triggers the
+   transition into place. */
+.toast-card {
+  will-change: transform, opacity;
+  transform: translateX(115%) scale(0.96);
+  opacity: 0;
+  transition:
+    transform 360ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    opacity 280ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.toast-card[data-state='open'] {
+  transform: translateX(0) scale(1);
+  opacity: 1;
+}
+.toast-card[data-state='leaving'] {
+  transform: translateX(115%) scale(0.94);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 280ms cubic-bezier(0.5, 0, 0.75, 0),
+    opacity 220ms cubic-bezier(0.5, 0, 0.75, 0);
+}
+
+.toast-progress {
+  transform-origin: left center;
+  animation-name: toast-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast-shell,
+  .toast-card {
+    transition-duration: 0.01ms !important;
+  }
+  .toast-progress {
+    animation-duration: 1ms !important;
+  }
+  .text-gradient {
+    animation: none !important;
+  }
+}
+
+/* Modal dialog — fade-in overlay + slide/scale-in panel. */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
+  transition:
+    background-color 220ms cubic-bezier(0.32, 0.72, 0, 1),
+    backdrop-filter 220ms cubic-bezier(0.32, 0.72, 0, 1),
+    -webkit-backdrop-filter 220ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.modal-overlay[data-state='open'] {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.modal-panel {
+  will-change: transform, opacity;
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+  transition:
+    opacity 240ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 320ms cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.modal-panel[data-state='open'] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay,
+  .modal-panel {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* CodeEditor: disable wrapping so long lines scroll horizontally.
+   react-simple-code-editor sets overflow:hidden on its container and width:100%
+   on the textarea - we override so the outer wrapper's overflow-auto can scroll. */
+.code-editor-nowrap > div {
+  overflow: visible !important;
+}
+.code-editor-nowrap textarea,
+.code-editor-nowrap pre {
+  white-space: pre !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  min-width: max-content !important;
+}

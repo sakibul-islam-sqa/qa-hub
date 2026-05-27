@@ -1,0 +1,28 @@
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Defense-in-depth headers.
+# - CSP: blocks injected scripts and limits what the page can talk to.
+#   - script-src is now strict ('self' only). The previous inline theme-init
+#     script lives at /theme-init.js so we can drop 'unsafe-inline' for scripts
+#     — the most important XSS lever.
+#   - style-src still allows 'unsafe-inline' because React `style={...}` props
+#     emit inline style attributes (toast progress bar, canvas sizing, etc.)
+#     and a static export cannot issue per-request nonces.
+#   - connect-src is intentionally broad because the app is a thin client that
+#     calls many AI providers directly (OpenAI, Anthropic, Gemini, Groq, OpenRouter,
+#     GitHub Models, Mistral, Cerebras) and Firebase, plus user-configured Ollama
+#     on localhost.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https: http://localhost:* http://127.0.0.1:* wss:; frame-src 'self' https: http:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"

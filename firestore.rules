@@ -1,0 +1,14 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Each authenticated user can read and write only their own subtree under
+    // /users/{uid}/**. QA Hub stores:
+    //   users/{uid}/prompts/{key}      — custom prompt templates
+    //   users/{uid}/settings/ai        — AI provider settings (api keys, models)
+    match /users/{uid}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}

@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint, typecheck, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Tests run only when a test script is defined in package.json, so
+      # adding Vitest/Jest later requires no workflow edits.
+      - name: Test
+        run: |
+          if node -e "process.exit(require('./package.json').scripts.test ? 0 : 1)"; then
+            npm test -- --run
+          else
+            echo "No test script defined — skipping."
+          fi
+
+      - name: Build
+        run: npm run build
+        env:
+          # Build is a static export; Firebase config is optional. Provide empty
+          # values so the build path that checks for them runs cleanly in CI.
+          NEXT_PUBLIC_FIREBASE_API_KEY: ''
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ''
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ''
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ''
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ''
+          NEXT_PUBLIC_FIREBASE_APP_ID: ''
